@@ -1,71 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joke Competition</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        button {
-            font-size: 18px;
-            padding: 10px 20px;
-        }
-
-        #results {
-            margin-top: 20px;
-        }
-
-        .joke {
-            background-color: #f0f0f0;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-
 <body>
     <h1>Joke Competition</h1>
     <button id="startCompetition">Start Competition</button>
     <div id="results"></div>
 
-    <script>
-        document.getElementById('startCompetition').addEventListener('click', startCompetition);
-
-        async function startCompetition() {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = 'Loading...';
-
-            try {
-                const response = await fetch('/run_competition', { method: 'POST' });
-                const data = await response.json();
-
-                let resultsHtml = `<h2>Theme: ${data.theme}</h2>`;
-                data.jokes.forEach((joke, index) => {
-                    resultsHtml += `
-                        <div class="joke">
-                            <h3>Joke ${index + 1}</h3>
-                            <p>${joke.text}</p>
-                            <p>Score: ${joke.score}</p>
-                            <p>Explanation: ${joke.explanation}</p>
-                        </div>
-                    `;
-                });
-
-                resultsDiv.innerHTML = resultsHtml;
-            } catch (error) {
-                resultsDiv.innerHTML = 'An error occurred. Please try again.';
-                console.error('Error:', error);
-            }
-        }
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-
 </html>
