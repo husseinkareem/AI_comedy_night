@@ -1,6 +1,6 @@
 # AI Comedy Night 🎭🤖
 
-![AI Comedy Night Logo](path/to/logo.png)
+![AI Comedy Night Logo](assets/images/logo.webp "AI Comedy Night Logo")
 <!-- Lägg till en rolig logotyp som kombinerar AI och komedi, t.ex. en robot med en mikrofon -->
 
 ## Översikt
