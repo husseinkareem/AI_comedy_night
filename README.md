@@ -6,8 +6,7 @@
 
 AI Comedy Night är en interaktiv webbapplikation som använder artificiell intelligens för att generera och bedöma skämt. Användare kan starta en skämttävling där AI:n genererar skämt baserade på ett slumpmässigt tema och sedan bedömer dem.
 
-![App Screenshot](path/to/app_screenshot.png)
-<!-- Lägg till en skärmdump av applikationens huvudgränssnitt -->
+![App Screenshot](images/app.png)
 
 ## Funktioner
 
@@ -86,7 +85,5 @@ Vi välkomnar bidrag till AI Comedy Night! Följ dessa steg:
 4. Pusha till branchen (`git push origin feature/AmazingFeature`)
 5. Öppna en Pull Request
 
-
-## Kontakt
 
 Projektlänk: [https://github.com/yourusername/ai-comedy-night](https://github.com/yourusername/ai-comedy-night)
