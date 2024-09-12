@@ -26,14 +26,10 @@ async function startCompetition() {
             body: JSON.stringify({ jokeCount: jokeCount }),
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
 
-        if (data.error) {
-            throw new Error(data.error);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}, message: ${data.error || 'Unknown error'}`);
         }
 
         let resultsHtml = `<h2>Theme: ${data.theme}</h2>`;
