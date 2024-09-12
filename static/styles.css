@@ -1,24 +1,93 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #f0f4f8;
+    color: #333;
+}
+
+.main-title {
+    font-family: 'Jacques Francois Shadow', cursive;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    line-height: 1.2;
+}
+
+.large-title {
+    font-size: 5em; /* Ökar fontstorleken betydligt */
+    letter-spacing: 2px; /* Lägger till lite mellanrum mellan bokstäverna */
+    transform: scale(1, 1.2); /* Sträcker ut texten vertikalt lite */
+}
+
+.container {
+    background-color: white;
+    padding: 40px; /* Ökar padding för att ge mer utrymme runt innehållet */
+    border-radius: 12px; /* Ökar rundningen av hörnen */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Förstärker skuggeffekten */
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #34495e;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
     font-size: 18px;
-    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #2980b9;
 }
 
 #results {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .joke {
-    background-color: #f0f0f0;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    background-color: #ecf0f1;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.joke h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.joke p {
+    margin: 10px 0;
+}
+
+.joke .score {
+    font-weight: bold;
+    color: #e74c3c;
 }
 
 .loading-indicator {

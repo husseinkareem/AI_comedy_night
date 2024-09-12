@@ -38,7 +38,7 @@ async function startCompetition() {
                 <div class="joke">
                     <h3>Joke ${index + 1}</h3>
                     <p>${joke.text}</p>
-                    <p>Score: ${joke.score}</p>
+                    <p class="score">Score: ${joke.score}</p>
                     <p>Explanation: ${joke.explanation}</p>
                 </div>
             `;
