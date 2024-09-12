@@ -3,23 +3,22 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f0f4f8;
-    color: #333;
+    background-color: #1a1a2e; /* Mörkblå bakgrund */
+    color: #e0e0e0; /* Ljusgrå text för bättre kontrast */
     line-height: 1.6;
 }
 
 .main-title {
     font-family: 'Jacques Francois Shadow', cursive;
     text-align: center;
-    color: #2c3e50;
     margin-bottom: 40px;
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
     line-height: 1.2;
-    background: linear-gradient(45deg, #3498db, #2c3e50);
+    background: linear-gradient(45deg, #4a69bd, #f6b93b);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent; /* Fallback for browsers that don't support background-clip: text */
+    color: #f6b93b; /* Fallback färg */
 }
 
 .large-title {
@@ -29,10 +28,10 @@ body {
 }
 
 .container {
-    background-color: white;
+    background-color: #16213e; /* Mörkblå bakgrund för containern */
     padding: 40px; /* Ökar padding för att ge mer utrymme runt innehållet */
     border-radius: 12px; /* Ökar rundningen av hörnen */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Förstärker skuggeffekten */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Förstärker skuggeffekten */
 }
 
 .input-group {
@@ -43,26 +42,29 @@ label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
-    color: #34495e;
+    color: #a5b1c2;
     font-size: 18px;
 }
 
 input[type="number"] {
     width: 100%;
     padding: 12px;
-    border: 2px solid #bdc3c7;
+    border: 2px solid #4a69bd;
+    background-color: #0f3460;
+    color: #e0e0e0;
     border-radius: 6px;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input[type="number"]:focus {
-    border-color: #3498db;
+    border-color: #f6b93b;
     outline: none;
+    box-shadow: 0 0 10px rgba(246, 185, 59, 0.5);
 }
 
 button {
-    background-color: #3498db;
+    background-color: #4a69bd;
     color: white;
     border: none;
     padding: 15px 25px;
@@ -77,9 +79,9 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #f6b93b;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(246, 185, 59, 0.3);
 }
 
 #results {
@@ -87,23 +89,24 @@ button:hover {
 }
 
 .joke {
-    background-color: #ecf0f1;
+    background-color: #0f3460;
     padding: 25px;
     margin-bottom: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .joke:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(246, 185, 59, 0.2);
 }
 
 .joke h3 {
-    color: #2c3e50;
+    color: #f6b93b;
     margin-top: 0;
     font-size: 22px;
-    border-bottom: 2px solid #3498db;
+    border-bottom: 2px solid #4a69bd;
     padding-bottom: 10px;
     margin-bottom: 15px;
 }
@@ -111,11 +114,12 @@ button:hover {
 .joke p {
     margin: 15px 0;
     font-size: 16px;
+    color: #e0e0e0;
 }
 
 .joke .score {
     font-weight: bold;
-    color: #e74c3c;
+    color: #f6b93b;
     font-size: 18px;
 }
 
@@ -127,8 +131,8 @@ button:hover {
 }
 
 .spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
+    border: 4px solid #0f3460;
+    border-top: 4px solid #f6b93b;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -147,6 +151,6 @@ button:hover {
 .subtitle {
     text-align: center;
     font-size: 1.2em;
-    color: #7f8c8d;
+    color: #a5b1c2;
     margin-bottom: 30px;
 }
