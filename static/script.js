@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function startCompetition() {
     const resultsDiv = document.getElementById('results');
+    const loadingIndicator = document.getElementById('loadingIndicator');
     const jokeCountInput = document.getElementById('jokeCount');
     const jokeCount = parseInt(jokeCountInput.value);
 
@@ -12,7 +13,9 @@ async function startCompetition() {
         return;
     }
 
-    resultsDiv.innerHTML = 'Loading...';
+    // Show loading indicator
+    loadingIndicator.classList.remove('hidden');
+    resultsDiv.innerHTML = '';
 
     try {
         const response = await fetch('/run_competition', {
@@ -49,5 +52,8 @@ async function startCompetition() {
     } catch (error) {
         resultsDiv.innerHTML = `An error occurred: ${error.message}`;
         console.error('Error:', error);
+    } finally {
+        // Hide loading indicator
+        loadingIndicator.classList.add('hidden');
     }
 }
