@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from joke_competition import generate_theme_and_jokes, score_jokes, APIError
 import webbrowser
 import threading
@@ -13,7 +13,14 @@ def index():
 @app.route('/run_competition', methods=['POST'])
 def run_competition():
     try:
-        theme, jokes = generate_theme_and_jokes(3)  # Generate 3 jokes
+        data = request.json
+        joke_count = data.get('jokeCount', 3)  # Default to 3 if not provided
+
+        # Validate joke count
+        if not isinstance(joke_count, int) or joke_count < 1 or joke_count > 5:
+            return jsonify({"error": "Invalid number of jokes. Please choose between 1 and 5."}), 400
+
+        theme, jokes = generate_theme_and_jokes(joke_count)
         if theme is None or not jokes:
             return jsonify({"error": "Failed to generate theme and jokes"}), 500
         

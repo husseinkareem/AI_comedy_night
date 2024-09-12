@@ -4,11 +4,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function startCompetition() {
     const resultsDiv = document.getElementById('results');
+    const jokeCountInput = document.getElementById('jokeCount');
+    const jokeCount = parseInt(jokeCountInput.value);
+
+    if (isNaN(jokeCount) || jokeCount < 1 || jokeCount > 5) {
+        resultsDiv.innerHTML = 'Please enter a valid number of jokes (1-5).';
+        return;
+    }
+
     resultsDiv.innerHTML = 'Loading...';
 
     try {
-        const response = await fetch('/run_competition', { method: 'POST' });
+        const response = await fetch('/run_competition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ jokeCount: jokeCount }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
 
         let resultsHtml = `<h2>Theme: ${data.theme}</h2>`;
         data.jokes.forEach((joke, index) => {
@@ -24,7 +47,7 @@ async function startCompetition() {
 
         resultsDiv.innerHTML = resultsHtml;
     } catch (error) {
-        resultsDiv.innerHTML = 'An error occurred. Please try again.';
+        resultsDiv.innerHTML = `An error occurred: ${error.message}`;
         console.error('Error:', error);
     }
 }
