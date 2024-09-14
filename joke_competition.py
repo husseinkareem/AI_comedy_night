@@ -1,109 +1,87 @@
 import os
-from openai import OpenAI
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
-from functools import lru_cache
-import json
+import logging
+import asyncio
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 # Load environment variables
 load_dotenv()
 
 # Set up OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class APIError(Exception):
     """Custom exception for API-related errors"""
     pass
 
-@lru_cache(maxsize=100)
-def openai_chat_completion_cached(messages_json, temperature):
-    """Cached wrapper for OpenAI ChatCompletion."""
-    messages = json.loads(messages_json)
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            temperature=temperature
-        )
-        return response.choices[0].message.content.strip()
-    except Exception as e:
-        raise APIError(f"OpenAI API error: {str(e)}")
+@retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
+async def generate_theme():
+    response = await client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Generate a short, interesting theme for a joke competition."},
+            {"role": "user", "content": "Theme:"}
+        ],
+        max_tokens=20,
+        temperature=0.8
+    )
+    return response.choices[0].message.content.strip()
 
-def openai_chat_completion(messages, temperature=0.7):
-    """Wrapper for the cached OpenAI ChatCompletion function."""
-    messages_json = json.dumps(messages)
-    return openai_chat_completion_cached(messages_json, temperature)
+@retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
+async def generate_joke(theme, model):
+    response = await client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": "You are a comedian. Generate a short joke based on the given theme."},
+            {"role": "user", "content": f"Theme: {theme}\nJoke:"}
+        ],
+        max_tokens=100,
+        temperature=0.7
+    )
+    return response.choices[0].message.content.strip(), model
 
-def generate_theme_and_jokes(num_jokes=3):
-    """Generate a theme and jokes in a single API call."""
-    messages = [
-        {"role": "system", "content": "You are a creative theme generator and comedian. Generate a short, interesting theme for a joke competition, followed by the specified number of jokes based on that theme."},
-        {"role": "user", "content": f"Generate a theme for a joke competition and exactly {num_jokes} joke(s) based on that theme. Format your response as follows:\nTheme: [theme]\nJoke 1: [joke1]\nJoke 2: [joke2]\n... (continue for the specified number of jokes)"}
-    ]
-    max_attempts = 3
-    for attempt in range(max_attempts):
-        try:
-            response = openai_chat_completion(messages)
-            if response:
-                lines = response.split('\n')
-                theme = None
-                jokes = []
-                for line in lines:
-                    if line.startswith("Theme:"):
-                        theme = line.split(":", 1)[1].strip()
-                    elif line.startswith("Joke"):
-                        joke = line.split(":", 1)[1].strip()
-                        jokes.append(joke)
-                
-                if theme is None or len(jokes) != num_jokes:
-                    if attempt < max_attempts - 1:
-                        print(f"Attempt {attempt + 1} failed. Retrying...")
-                        continue
-                    else:
-                        raise APIError(f"Failed to generate correct number of jokes after {max_attempts} attempts.")
-                return theme, jokes
-            else:
-                raise APIError("No response received from the API")
-        except Exception as e:
-            if attempt < max_attempts - 1:
-                print(f"Attempt {attempt + 1} failed. Retrying...")
-            else:
-                print(f"Error generating theme and jokes: {str(e)}")
-                raise APIError(f"Error generating theme and jokes: {str(e)}")
+async def generate_theme_and_jokes(joke_count):
+    theme = await generate_theme()
+    models = ["gpt-3.5-turbo", "gpt-4", "gpt-3.5-turbo-16k"] * (joke_count // 3 + 1)
+    tasks = [generate_joke(theme, models[i]) for i in range(joke_count)]
+    jokes_with_models = await asyncio.gather(*tasks)
+    return theme, jokes_with_models
 
-def score_jokes(theme, jokes):
-    """Score multiple jokes in a single API call."""
-    jokes_text = "\n".join([f"Joke {i+1}: {joke}" for i, joke in enumerate(jokes)])
-    messages = [
-        {"role": "system", "content": "You are a joke evaluator. Score the given jokes based on humor, relevance to the theme, and creativity. Provide a score out of 10 and a brief explanation for each joke."},
-        {"role": "user", "content": f"Theme: {theme}\n{jokes_text}\nScore each joke out of 10 and explain your rating. Format your response as follows:\nJoke 1 Score: [score]\nJoke 1 Explanation: [explanation]\n"}
-    ]
-    try:
-        response = openai_chat_completion(messages)
-        if response:
-            lines = response.split('\n')
-            scores = []
-            explanations = []
-            current_explanation = ""
-            for line in lines:
-                if line.startswith("Joke") and "Score:" in line:
-                    if current_explanation:
-                        explanations.append(current_explanation.strip())
-                        current_explanation = ""
-                    score = line.split("Score:", 1)[1].strip()
-                    scores.append(score)
-                elif line.startswith("Explanation:"):
-                    current_explanation = line.split("Explanation:", 1)[1].strip()
-                else:
-                    current_explanation += " " + line.strip()
-            
-            if current_explanation:
-                explanations.append(current_explanation.strip())
-
-            if len(scores) != len(jokes) or len(explanations) != len(jokes):
-                raise APIError(f"Mismatch in number of jokes and scores/explanations. Jokes: {len(jokes)}, Scores: {len(scores)}, Explanations: {len(explanations)}")
-            return scores, explanations
-        else:
-            raise APIError("No response received from the API")
-    except Exception as e:
-        print(f"Error scoring jokes: {str(e)}")
-        raise APIError(f"Error scoring jokes: {str(e)}")
+@retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(5))
+async def score_jokes(theme, jokes_with_models):
+    jokes_text = "\n".join([f"Joke {i+1} (by {model}): {joke}" for i, (joke, model) in enumerate(jokes_with_models)])
+    response = await client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a joke evaluator. Score the given jokes based on humor, relevance to the theme, and creativity. Provide separate scores out of 10 for each category and a brief explanation."},
+            {"role": "user", "content": f"Theme: {theme}\n{jokes_text}\nScore each joke out of 10 for humor, relevance, and creativity. Provide a brief explanation. Format your response as follows:\nJoke 1:\nHumor: [score]/10\nRelevance: [score]/10\nCreativity: [score]/10\nExplanation: [explanation]\n"}
+        ],
+        max_tokens=1000,
+        temperature=0.7
+    )
+    
+    content = response.choices[0].message.content
+    logging.debug(f"Raw GPT-4 response: {content}")
+    jokes_scores = []
+    for joke_eval in content.split('Joke ')[1:]:
+        lines = joke_eval.split('\n')
+        scores = {}
+        explanation = "No explanation provided."
+        for line in lines:
+            if ':' in line:
+                key, value = line.split(':', 1)
+                key = key.strip().lower()
+                value = value.strip()
+                if key in ['humor', 'relevance', 'creativity']:
+                    scores[key] = int(value.split('/')[0])
+                elif key == 'explanation':
+                    explanation = value
+        jokes_scores.append((scores, explanation))
+    
+    logging.debug(f"Parsed scores: {jokes_scores}")
+    
+    if len(jokes_scores) != len(jokes_with_models):
+        raise APIError(f"Mismatch in number of jokes and evaluations. Jokes: {len(jokes_with_models)}, Evaluations: {len(jokes_scores)}")
+    
+    return jokes_scores

@@ -34,12 +34,18 @@ async function startCompetition() {
 
         let resultsHtml = `<h2>Theme: ${data.theme}</h2>`;
         data.jokes.forEach((joke, index) => {
+            const totalScore = (joke.scores.humor + joke.scores.relevance + joke.scores.creativity) / 3;
             resultsHtml += `
                 <div class="joke">
-                    <h3>Joke ${index + 1}</h3>
+                    <h3>Joke ${index + 1} (${joke.model})</h3>
                     <p>${joke.text}</p>
-                    <p class="score">Score: ${joke.score}</p>
-                    <p>Explanation: ${joke.explanation}</p>
+                    <div class="scores">
+                        <p class="score">Humor: ${joke.scores.humor}/10</p>
+                        <p class="score">Relevance: ${joke.scores.relevance}/10</p>
+                        <p class="score">Creativity: ${joke.scores.creativity}/10</p>
+                        <p class="total-score">Total Score: ${totalScore.toFixed(2)}/10</p>
+                    </div>
+                    <p class="explanation">Explanation: ${joke.explanation}</p>
                 </div>
             `;
         });

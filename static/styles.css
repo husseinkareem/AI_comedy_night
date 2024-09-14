@@ -154,3 +154,25 @@ button:hover {
     color: #a5b1c2;
     margin-bottom: 30px;
 }
+
+.scores {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.score {
+    font-weight: bold;
+    color: #a5b1c2;
+}
+
+.total-score {
+    font-weight: bold;
+    color: #f6b93b;
+    font-size: 1.2em;
+}
+
+.explanation {
+    font-style: italic;
+    color: #a5b1c2;
+}

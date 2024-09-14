@@ -18,22 +18,22 @@ AI Comedy Night är en interaktiv webbapplikation som använder artificiell inte
 
 ## Teknisk Stack
 
-- **Backend**: Python med Flask
+- **Backend**: Python med Quart (asynkron version av Flask)
 - **Frontend**: HTML, CSS, JavaScript
-- **AI**: OpenAI's GPT-3.5 Turbo
+- **AI**: OpenAI's GPT-3.5 Turbo och GPT-4
 - **Styling**: Custom CSS med responsiv design
 
 ## Installation
 
 1. Klona repositoryt:
    ```
-   git clone https://github.com/yourusername/ai-comedy-night.git
-   cd ai-comedy-night
+   git clone https://github.com/husseinkareem/AI_comedy_night.git
+   cd AI_comedy_night
    ```
 
-2. Installera beroenden:
+2. Installera de nödvändiga paketen:
    ```
-   pip install -r requirements.txt
+   pip install quart openai python-dotenv tenacity
    ```
 
 3. Skapa en `.env` fil i projektets rotmapp och lägg till din OpenAI API-nyckel:
@@ -51,7 +51,6 @@ AI Comedy Night är en interaktiv webbapplikation som använder artificiell inte
 ## Användning
 
 ![Usage GIF](path/to/usage.gif)
-<!-- GIF som visar hur man använder applikationen -->
 
 1. Ange antalet skämt du vill generera (1-5)
 2. Klicka på "Start Competition"
@@ -61,11 +60,10 @@ AI Comedy Night är en interaktiv webbapplikation som använder artificiell inte
 
 ## Projektstruktur
 
-- `app.py`: Huvudapplikationsfil med Flask-servern
+- `app.py`: Huvudapplikationsfil med Quart-servern
 - `joke_competition.py`: Logik för skämtgenerering och bedömning
 - `static/`: Innehåller CSS och JavaScript filer
 - `templates/`: Innehåller HTML-mallar
-- `main.py`: Skript för att köra tävlingen i terminalen (alternativ användning)
 
 ## Framtida Förbättringar
 
@@ -74,16 +72,6 @@ AI Comedy Night är en interaktiv webbapplikation som använder artificiell inte
 - [ ] Skapa en funktion för användargenererade teman
 - [ ] Integrera text-till-tal för uppläsning av skämt
 - [ ] Utöka med fler språkalternativ
+- [ ] Optimera prestanda för snabbare generering av skämt
 
-## Bidra
-
-Vi välkomnar bidrag till AI Comedy Night! Följ dessa steg:
-
-1. Forka repositoryt
-2. Skapa en ny branch (`git checkout -b feature/AmazingFeature`)
-3. Commita dina ändringar (`git commit -m 'Add some AmazingFeature'`)
-4. Pusha till branchen (`git push origin feature/AmazingFeature`)
-5. Öppna en Pull Request
-
-
-Projektlänk: [https://github.com/yourusername/ai-comedy-night](https://github.com/yourusername/ai-comedy-night)
+Projektlänk: [https://github.com/husseinkareem/AI_comedy_night](https://github.com/husseinkareem/AI_comedy_night)
